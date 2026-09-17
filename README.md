@@ -105,6 +105,20 @@ player moves.
 extremes, so a panel's own threshold costs nothing on top. `MonoPacked` is what
 SSD1306, Sharp and e-ink controllers expect.
 
+## Writing another host
+
+A host that is not Quadrate — a calculator, a framebuffer, a microcontroller —
+implements the six `DG_*` hooks itself and links `src/doomgeneric/` directly
+rather than through the Quadrate surface. Two pieces here are written for that
+case and belong to no host in particular:
+
+- `src/mono.c` — the 1-bit reduction, over a caller's buffer
+- `src/keyqueue.c` — a key transition buffer, for hosts that learn about keys
+  outside the tick and must hand them to `DG_GetKey` during it. Push with
+  `keyqueue_push`, and let `DG_GetKey` forward to `keyqueue_pop`
+
+doom-quadrate's qdos port is one such host, and uses both.
+
 ## Framebuffer size
 
 DOOM renders 320×200 and doomgeneric scales that by whole numbers only. The
@@ -168,8 +182,8 @@ than by patching the header that declares it.
 make test
 ```
 
-`tests/mono_test.c` covers the reduction directly, since `mono.c` takes a
-caller's buffer rather than the engine's. The Quadrate surface is covered from
+`tests/mono_test.c` and `tests/keyqueue_test.c` cover the reduction and the key
+buffer directly, since neither needs DOOM. The Quadrate surface is covered from
 doom-quadrate, where there is a WAD to start the engine with.
 
 ## License

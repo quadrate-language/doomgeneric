@@ -23,7 +23,7 @@ VENDOR = .vendor/doomgeneric
 ENGINE_DIR = src/doomgeneric
 ENGINE_STAMP = $(ENGINE_DIR)/.imported
 
-TEST = tests/mono_test
+TESTS = tests/mono_test tests/keyqueue_test
 
 .PHONY: all engine import test clean distclean
 
@@ -58,14 +58,17 @@ import:
 	@$(MAKE) --no-print-directory engine
 	@echo "Imported $(DOOM_COMMIT)"
 
-test: $(TEST)
-	./$(TEST)
+test: $(TESTS)
+	@for t in $(TESTS); do ./$$t || exit 1; done
 
-$(TEST): tests/mono_test.c src/mono.c src/mono.h
+tests/mono_test: tests/mono_test.c src/mono.c src/mono.h
 	$(CC) -std=gnu11 -O2 -Wall -Wextra -o $@ tests/mono_test.c src/mono.c -lm
 
+tests/keyqueue_test: tests/keyqueue_test.c src/keyqueue.c src/keyqueue.h
+	$(CC) -std=gnu11 -O2 -Wall -Wextra -o $@ tests/keyqueue_test.c src/keyqueue.c
+
 clean:
-	rm -rf lib $(TEST)
+	rm -rf lib $(TESTS)
 
 # Also drops the fetched engine, so the next build goes back to the network.
 distclean: clean

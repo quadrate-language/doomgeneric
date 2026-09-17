@@ -5,3 +5,4 @@ lib/
 /.vendor/
 /src/doomgeneric/
 /tests/mono_test
+/tests/keyqueue_test

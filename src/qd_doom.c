@@ -7,18 +7,14 @@
 #include <quadrate/rt/ffi.h>
 
 #include "doomgeneric/doomgeneric.h"
+#include "keyqueue.h"
 #include "qd_stack.h"
 
 #define MAX_ARGS 32
-#define KEY_QUEUE_SIZE 64
 #define TITLE_MAX 256
 
 static char* s_argv[MAX_ARGS];
 static int s_argc = 0;
-
-static unsigned short s_key_queue[KEY_QUEUE_SIZE];
-static unsigned int s_key_write = 0;
-static unsigned int s_key_read = 0;
 
 static int s_frame_ready = 0;
 static char s_title[TITLE_MAX] = "DOOM";
@@ -56,16 +52,7 @@ uint32_t DG_GetTicksMs(void) {
 }
 
 int DG_GetKey(int* pressed, unsigned char* doom_key) {
-	if (s_key_read == s_key_write) {
-		return 0;
-	}
-
-	unsigned short key_data = s_key_queue[s_key_read];
-	s_key_read = (s_key_read + 1) % KEY_QUEUE_SIZE;
-
-	*pressed = key_data >> 8;
-	*doom_key = (unsigned char)(key_data & 0xff);
-	return 1;
+	return keyqueue_pop(pressed, doom_key);
 }
 
 void DG_SetWindowTitle(const char* title) {
@@ -147,15 +134,7 @@ int PushKey(qd_context* ctx) {
 	int64_t key = qd_take_int(ctx, "PushKey");
 	int64_t pressed = qd_take_int(ctx, "PushKey");
 
-	// Full: drop the key rather than overwrite one DOOM has not seen yet, so a
-	// press is never left without its release.
-	unsigned int next = (s_key_write + 1) % KEY_QUEUE_SIZE;
-	if (next == s_key_read) {
-		return 0;
-	}
-
-	s_key_queue[s_key_write] = (unsigned short)(((pressed != 0) << 8) | (key & 0xff));
-	s_key_write = next;
+	keyqueue_push(pressed != 0, (unsigned char)(key & 0xff));
 	return 0;
 }
 
