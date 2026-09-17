@@ -1,0 +1,16 @@
+import "libdoomgeneric_static.a" as "native" {
+	pub fn AddArg(arg:str -- )
+	pub fn Create()
+
+	pub fn Tick()
+
+	pub fn ScreenBuffer( -- pixels:ptr)
+	pub fn Width( -- pixels:i64)
+	pub fn Height( -- pixels:i64)
+	pub fn Pitch( -- bytes:i64)
+
+	pub fn PushKey(pressed:i64 key:i64 -- )
+
+	pub fn TakeFrame( -- ready:i64)
+	pub fn TakeTitle( -- title:str changed:i64)
+}

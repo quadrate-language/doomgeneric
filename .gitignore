@@ -1,0 +1,7 @@
+lib/
+*.a
+*.o
+*.so
+/.vendor/
+/src/doomgeneric/
+/tests/mono_test

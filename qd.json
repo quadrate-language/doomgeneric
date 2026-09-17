@@ -1,0 +1,13 @@
+{
+	"name": "doomgeneric",
+	"version": "0.1.0",
+	"description": "The DOOM engine for Quadrate, via doomgeneric",
+	"license": "GPL-3.0-or-later",
+	"scripts": {
+		"prebuild": "make engine"
+	},
+	"native": {
+		"link": ["m"],
+		"cflags": ["-DDOOMGENERIC_RESX=400", "-DDOOMGENERIC_RESY=240"]
+	}
+}

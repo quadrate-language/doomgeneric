@@ -1,0 +1,45 @@
+pub const KeyRightArrow = 0xae
+pub const KeyLeftArrow = 0xac
+pub const KeyUpArrow = 0xad
+pub const KeyDownArrow = 0xaf
+pub const KeyStrafeL = 0xa0
+pub const KeyStrafeR = 0xa1
+pub const KeyUse = 0xa2
+pub const KeyFire = 0xa3
+pub const KeyEscape = 27
+pub const KeyEnter = 13
+pub const KeyTab = 9
+pub const KeyBackspace = 0x7f
+pub const KeyPause = 0xff
+pub const KeyEquals = 0x3d
+pub const KeyMinus = 0x2d
+
+pub const KeyF1 = 0xbb
+pub const KeyF2 = 0xbc
+pub const KeyF3 = 0xbd
+pub const KeyF4 = 0xbe
+pub const KeyF5 = 0xbf
+pub const KeyF6 = 0xc0
+pub const KeyF7 = 0xc1
+pub const KeyF8 = 0xc2
+pub const KeyF9 = 0xc3
+pub const KeyF10 = 0xc4
+pub const KeyF11 = 0xd7
+pub const KeyF12 = 0xd8
+
+pub const KeyRShift = 0xb6
+pub const KeyRCtrl = 0x9d
+pub const KeyRAlt = 0xb8
+pub const KeyLAlt = 0xb8
+
+pub const KeyCapsLock = 0xba
+pub const KeyNumLock = 0xc5
+pub const KeyScrollLock = 0xc6
+pub const KeyPrintScreen = 0xd9
+
+pub const KeyHome = 0xc7
+pub const KeyEnd = 0xcf
+pub const KeyPageUp = 0xc9
+pub const KeyPageDown = 0xd1
+pub const KeyInsert = 0xd2
+pub const KeyDelete = 0xd3

@@ -1,0 +1,11 @@
+import "libdoomgeneric_static.a" as "native" {
+	pub fn MonoGray8(dest:ptr -- )
+	pub fn MonoPacked(dest:ptr invert:i64 -- )
+	pub fn MonoPreview(dest:ptr -- )
+
+	pub fn MonoStride( -- bytes:i64)
+	pub fn MonoGray8Size( -- bytes:i64)
+	pub fn MonoPackedSize( -- bytes:i64)
+
+	pub fn SetBrightness(percent:i64 -- )
+}

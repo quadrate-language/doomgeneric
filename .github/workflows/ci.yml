@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Build against the current compiler
+    runs-on: ubuntu-latest
+    container: debian:testing
+    steps:
+      - name: Install packages
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            build-essential ca-certificates clang git libclang-rt-dev \
+            libssl-dev llvm-dev meson ninja-build patch patchelf pkg-config \
+            python3 zlib1g-dev
+
+      - uses: actions/checkout@v5
+        with:
+          path: module
+
+      # No release tarballs are published yet, so the compiler is built from
+      # source. This is the whole point of the job: nothing else checks that this
+      # module still compiles against a compiler that has moved on.
+      - name: Check out and build the compiler
+        run: |
+          git clone --depth 1 https://github.com/quadrate-language/quadrate.git
+          git config --global --add safe.directory "$PWD/quadrate"
+          make -C quadrate release
+
+      - name: Build the module's C sources
+        run: |
+          export PATH="$PWD/quadrate/dist/bin:$PATH"
+          export QUADRATE_LIBDIR="$PWD/quadrate/dist/lib"
+          # The build runs this module's prebuild script, which fetches the
+          # engine with git.
+          git config --global --add safe.directory '*'
+          cd module && quadpm build
+
+      - name: Format check
+        run: |
+          export PATH="$PWD/quadrate/dist/bin:$PATH"
+          cd module && quadfmt -c .
+
+      - name: Lint
+        run: |
+          export PATH="$PWD/quadrate/dist/bin:$PATH"
+          cd module && quadlint .
+
+      # The reduction is plain C over a caller's buffer, so it tests without an
+      # IWAD or a compiler. The Quadrate surface is covered by doom-quadrate.
+      - name: Test
+        run: cd module && make test
